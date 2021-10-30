@@ -26,3 +26,16 @@ app.get('/pet', (req, res) => {
 });
 ```
 
+#### 서버에서 HTML 파일전송해보기 & Nodemon으로 자동화
+
+1 . client: 주소창에 URL 을 입력한다는 것은 서버에 GET 요청을 한다는 것
+
+2 . `sendFile()` 사용법
+
+```js
+app.get('/', (req, res) => {
+  res.sendFile(__dirname + '/index.html');
+});
+```
+
+> __dirname은 현재 파일의 경로를 뜻한다.
