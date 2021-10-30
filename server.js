@@ -23,3 +23,7 @@ app.get('/pet', (req, res) => {
 app.get('/beauty', (req, res) => {
   res.send('뷰티 용품 쇼핑할 수 있는 페이지입니다');
 });
+
+app.get('/write', (req, res) => {
+  res.sendFile(__dirname + '/write.html');
+});

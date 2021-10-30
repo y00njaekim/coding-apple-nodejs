@@ -39,3 +39,11 @@ app.get('/', (req, res) => {
 ```
 
 > __dirname은 현재 파일의 경로를 뜻한다.
+
+<br/>
+
+❓React `routes` 에서 특정 링크 이동시 특정 컴포넌트 리턴 수행 🆚 nodejs 에서 특정 링크 이동시 특정 파일 `send` 해주는 것의 차이
+
+#### Bootstrap을 이용한 빠른 UI 개발
+
+[Bootstrap](https://getbootstrap.com/docs/4.6/getting-started/introduction/) 페이지 이동 후 `Starter template` 참조
