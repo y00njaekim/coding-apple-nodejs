@@ -162,10 +162,13 @@ app.use(express.urlencoded({extended: true}))
 
 예시 :
 
-**instagram.com/explore/tags/kpop
-instagram.com/explore/tags/food**
-**facebook.com/natgeo/photos
-facebook.com/bbc/photos**
+**instagram.com/explore/tags/kpop**
+
+**instagram.com/explore/tags/food**
+
+**facebook.com/natgeo/photos**
+
+**facebook.com/bbc/photos**
 
 관습 :
 
