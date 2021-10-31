@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+app.use(express.urlencoded({extended: true}));
 
 // 8080 포트를 통해 '들어오는' 상황의 callback function
 app.listen(8080, function () {
@@ -26,4 +27,9 @@ app.get('/beauty', (req, res) => {
 
 app.get('/write', (req, res) => {
   res.sendFile(__dirname + '/write.html');
+});
+
+app.post('/add', (req, res) => {
+  res.send('전송완료');
+  console.log(req.body);
 });
