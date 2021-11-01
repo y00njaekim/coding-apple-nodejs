@@ -1,6 +1,7 @@
 const express = require('express');
 const MongoClient = require('mongodb').MongoClient;
 const app = express();
+app.set('view engine', 'ejs');
 app.use(express.urlencoded({extended: true}));
 
 var db;
@@ -48,4 +49,8 @@ app.post('/add', (req, res) => {
       res.send('전송완료');
     }
   });
+});
+
+app.get('/list', (req, res) => {
+  res.render('list.ejs');
 });
