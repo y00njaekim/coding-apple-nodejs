@@ -28,6 +28,8 @@
 
 [7. 게시물마다 번호 달기 2 : DB Update 함수와 inc 연산자](#게시물마다-번호-달기-2-db-update-함수와-inc-연산자)
 
+[8. AJAX로 삭제요청하기 1 (HTML 파일 구성)](#ajax로-삭제요청하기-1)
+
 
 
 
@@ -309,4 +311,29 @@ db.collection('counter').findOne({name : '게시물갯수'}, function(에러, �
      })
    })
    ```
+
+#### AJAX로 삭제요청하기 1
+
+1. HTML 에서는 일반적으로 `PUT`, `DELETE` method 를 사용할 수 없다. 그에 대한 해결 법으로는,
+   1. method-override 라는 라이브러리의 도움을 받는다
+   2. AJAX 로 `DELETE` 요청을 보낸다.
+   3. `POST` 요청을 통해 `DELETE` 작업을 수행한다.
+2. AJAX 란 프론트엔드에서 JS 를 이용하여 서버에 여러 요청을 할 수 있는 JS 문법이다. 새로고침 없이 서버에 몰래몰래 요청을 할 수 있다.
+3. JS 만을 이용해서 AJAX 를 사용할 수 있지만 그렇게 하면 다소 긴 코드를 작성해야 한다. 이 때 JQuery 를 이용하면 간편해진다. `<script>` 태그와 JQuery CDN 을 이용하여 사용하자. 
+
+```html
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+
+<script>
+  $.ajax({
+    method : 'DELETE',
+    url : '/delete',
+    data : '1번게시물'
+  }).done(function(결과){
+    AJAX 성공시 실행할 코드는 여기
+  }).fail(function(에러){
+    실패시 실행할 코드는 여기
+  });
+</script>
+```
 

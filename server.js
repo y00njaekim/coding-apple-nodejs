@@ -66,3 +66,7 @@ app.get('/list', (req, res) => {
       res.render('list.ejs', {posts: rep});
     });
 });
+
+app.delete('/delete', (req, res) => {
+  console.log(req.body);
+});
