@@ -43,8 +43,15 @@ app.post('/add', (req, res) => {
   db.collection('counter').findOne({name: 'numOfPosts'}, (err, rep) => {
     if (err) return console.log(err);
     var count = rep.totalPost;
+
     db.collection('post').insertOne({id: count + 1, name: req.body.title, date: req.body.date}, (err, rep) => {
+      if (err) return console.log(err);
       console.log('저장완료');
+
+      db.collection('counter').updateOne({name: 'numOfPosts'}, {$inc: {totalPost: 1}}, (err, rep) => {
+        if (err) return console.log(err);
+      });
+
       res.send('전송완료');
     });
   });

@@ -26,6 +26,8 @@
 
 [6. 게시물마다 번호를 달아 저장하려면](#게시물마다-번호를-달아-저장하려면)
 
+[7. 게시물마다 번호 달기 2 : DB Update 함수와 inc 연산자](#게시물마다-번호-달기-2-:-db-update-함수와-inc-연산자)
+
 
 
 
@@ -282,4 +284,29 @@ db.collection('counter').findOne({name : '게시물갯수'}, function(에러, �
     var 총게시물갯수 = 결과.totalPost;
 }
 ```
+
+#### 게시물마다 번호 달기 2 : DB Update 함수와 inc 연산자
+
+1. `updateOne`
+
+   ```js
+   db.collection('counter').updateOne( {요런 이름의 자료를} , {이렇게 수정해주세요} , function(에러, 결과){  console.log('수정완료') })
+   ```
+
+   가운데 인자는 `$` 기호를 통해 operator 를 적용시킬 수 있다. `$set`(변경) , `inc`(증가) , `min`(기존값보다 적을 때만 변경) , `rename`(key값 이름변경) 등 여러 operator 가 존재한다.
+
+   ```js
+   app.post('/add', function (요청, 응답) {
+     db.collection('counter').findOne({name : '게시물갯수'}, function(에러, 결과){
+       var 총게시물갯수 = 결과.totalPost
+   
+       db.collection('post').insertOne({ _id : 총게시물갯수 + 1, 제목 : 요청.body.title, 날짜 : 요청.body.date }, function (에러, 결과) {
+         db.collection('counter').updateOne({name:'게시물갯수'},{ $inc: {totalPost:1} },function(에러, 결과){
+   	if(에러){return console.log(에러)}
+           응답.send('전송완료');
+         })
+       })
+     })
+   })
+   ```
 
