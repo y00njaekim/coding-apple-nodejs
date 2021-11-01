@@ -26,7 +26,7 @@
 
 [6. 게시물마다 번호를 달아 저장하려면](#게시물마다-번호를-달아-저장하려면)
 
-[7. 게시물마다 번호 달기 2 : DB Update 함수와 inc 연산자](#게시물마다-번호-달기-2-:-db-update-함수와-inc-연산자)
+[7. 게시물마다 번호 달기 2 : DB Update 함수와 inc 연산자](#게시물마다-번호-달기-2-db-update-함수와-inc-연산자)
 
 
 
@@ -285,7 +285,7 @@ db.collection('counter').findOne({name : '게시물갯수'}, function(에러, �
 }
 ```
 
-#### 게시물마다 번호 달기 2 : DB Update 함수와 inc 연산자
+#### 게시물마다 번호 달기 2 DB Update 함수와 inc 연산자
 
 1. `updateOne`
 
