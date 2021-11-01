@@ -6,8 +6,6 @@ app.use(express.urlencoded({extended: true}));
 
 var db;
 MongoClient.connect('mongodb+srv://keymy00njae:rladbswo12@cluster0.tjh3m.mongodb.net/myFirstDatabase?retryWrites=true&w=majority', (err, client) => {
-  if (err) return console.log(err);
-
   db = client.db('todoapp');
   // db.collection('post').insertOne({name: 'John', age: 20}, (err, rep) => {
   //   console.log('저장완료');
@@ -43,14 +41,18 @@ app.get('/write', (req, res) => {
 
 app.post('/add', (req, res) => {
   db.collection('post').insertOne({name: req.body.title, date: req.body.date}, (err, rep) => {
-    if (err) return console.log(err);
-    else {
-      console.log('저장완료');
-      res.send('전송완료');
-    }
+    console.log('저장완료');
+    res.send('전송완료');
   });
 });
 
 app.get('/list', (req, res) => {
-  res.render('list.ejs');
+  const tmp = db
+    .collection('post')
+    .find()
+    .toArray((err, rep) => {
+      if (err) return console.log(err);
+      // console.log(rep);
+      res.render('list.ejs', {posts: rep});
+    });
 });

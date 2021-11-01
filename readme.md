@@ -20,6 +20,8 @@
 
 [3. HTML에 DB데이터 꽂아넣는 법 1 (EJS)](#html에-db데이터-꽂아넣는-법-1)
 
+[4. HTML에 DB데이터 꽂아넣는 법 2 (DB데이터 읽기)](html에-db데이터-꽂아넣는-법-2)
+
 
 
 
@@ -233,4 +235,24 @@ app.get('/list', (req, res) => {
   res.render('list.ejs');
 });
 ```
+
+#### HTML에 DB데이터 꽂아넣는 법 2
+
+1. `app.get()` 에 `render` 함수를 쓰며 option 으로 자료 넘겨줄 수 있음
+
+```js
+app.get('/list', (req, res) => {
+  const tmp = db
+    .collection('post')
+    .find()
+    .toArray((err, rep) => {
+      if (err) return console.log(err);
+      res.render('list.ejs', {posts: rep});
+    });
+});
+```
+
+`render(view: string, options?: object)`
+
+Render `view` with the given `options`
 
