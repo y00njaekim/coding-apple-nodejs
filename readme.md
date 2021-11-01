@@ -1,5 +1,7 @@
 ## Contents
 
+#### Part1
+
 [6. 두근두근 내 첫서버에서 GET 요청을 처리해보자](#두근두근-내-첫서버에서-get-요청을-처리해보자)
 
 [7. 서버에서 HTML 파일전송해보기 & Nodemon으로 자동화](#서버에서-html-파일전송해보기-&-nodemon으로-자동화)
@@ -9,6 +11,16 @@
 [9. 폼에 입력한 데이터를 서버에 전송하는 법 (POST요청)](#폼에-입력한-데이터를-서버에-전송하는-법)
 
 [10. (쉬어가기) REST API가 뭔지 세계 최고로 쉽게 설명해드림](#rest-api가-뭔지-세계-최고로-쉽게-설명해드림)
+
+#### Part2
+
+[1. MongoDB 셋팅하기 (무료 호스팅도 받아보자)](#mongodb-셋팅하기)
+
+[2. Database에 자료 저장하는 법 (한줄이면 끝)](#database에-자료-저장하는-법)
+
+
+
+
 
 ## Part1
 
@@ -107,7 +119,7 @@ app.use(express.urlencoded({extended: true}))
 - `action` :The URI of a program that processes the form information.
 - `method` : The HTTP method that the browser uses to submit the form. Possible values are:
 
-❓URI 가 정확히 무엇이며 어떤 기능을 하는 걸까?
+❓URI 가 정확히 무엇이며 어떤 기능을 하는 걸까? URL 과의 차이점은 무엇일까?
 
 🙋‍♂️ URI
 
@@ -178,3 +190,35 @@ app.use(express.urlencoded({extended: true}))
 - 띄어쓰기는 대시`-` 사용
 - 파일 확장자 쓰지 말기
 - 하위 문서들을 뜻할 땐 / 기호를 사용
+
+<br/>
+
+## Part2
+
+#### MongoDB 셋팅하기
+
+1. DB 존재 위치 / 이용 방법.
+
+   하드에 저장 🆚 호스팅
+
+2. 접속 URL 복붙: `mongodb+srv://디비계정아이디:디비계정패스워드@cluster0-qaxa3.mongodb.net/데이터베이스이름?retryWrites=true&w=majority`
+
+#### Database에 자료 저장하는 법
+
+1. `<form>` `input` 자료를 저장하는 방법
+
+```
+app.post('/add', function(요청, 응답){
+  응답.send('전송완료');
+  db.collection('post').insertOne( { 제목 : 요청.body.title, 날짜 : 요청.body.date } , function(){
+    console.log('저장완료')
+  });
+});
+```
+
+❗참고로 **응답.send()** 이 부분은 항상 존재해야 한다.
+
+전송이 실패 성공과 상관 없이 서버에서 무언가 응답하지 않으면 브라우저가 멈춘다
+
+메세지로 응답하지 않으려면 간단한 응답코드를 보내거나 리다이렉트(페이지강제이동)를 해주식으로 구성할 수도 있다.
+
