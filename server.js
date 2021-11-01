@@ -40,15 +40,18 @@ app.get('/write', (req, res) => {
 });
 
 app.post('/add', (req, res) => {
-  db.collection('post').insertOne({name: req.body.title, date: req.body.date}, (err, rep) => {
-    console.log('저장완료');
-    res.send('전송완료');
+  db.collection('counter').findOne({name: 'numOfPosts'}, (err, rep) => {
+    if (err) return console.log(err);
+    var count = rep.totalPost;
+    db.collection('post').insertOne({id: count + 1, name: req.body.title, date: req.body.date}, (err, rep) => {
+      console.log('저장완료');
+      res.send('전송완료');
+    });
   });
 });
 
 app.get('/list', (req, res) => {
-  const tmp = db
-    .collection('post')
+  db.collection('post')
     .find()
     .toArray((err, rep) => {
       if (err) return console.log(err);

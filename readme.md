@@ -22,6 +22,10 @@
 
 [4. HTML에 DB데이터 꽂아넣는 법 2 (DB데이터 읽기)](html에-db데이터-꽂아넣는-법-2)
 
+[5. 심심할 때 읽어보는 DB의 종류와 특징](#심심할-때-읽어보는-db의-종류와-특징)
+
+[6. 게시물마다 번호를 달아 저장하려면](#게시물마다-번호를-달아-저장하려면)
+
 
 
 
@@ -255,4 +259,27 @@ app.get('/list', (req, res) => {
 `render(view: string, options?: object)`
 
 Render `view` with the given `options`
+
+#### 심심할 때 읽어보는 DB의 종류와 특징
+
+1. MongoDB 도 스키마를 미리 정의하기 위해 Mongoose 같은 라이브러리를 추가해서 사용하기도 한다.
+
+2.  NoSQL 데이터베이스는 기본적으로 SQL에서의 JOIN 연산을 적용하는게 어렵다. 때문에 서버 단에서 JOIN 연산을 쉽게 처리해주는 라이브러리를 이용해야 한다.
+
+3. 대부분의 NoSQL 데이터베이스는 scale out이라는 방법으로 데이터를 분산 저장하는 방법을 기본적으로 지원한다.
+
+4. MongoDB에서도 Relational Database처럼 관계를 표현해 저장하기도 한다.
+
+   <img src="https://user-images.githubusercontent.com/56385667/139691355-1110d1cb-19be-4a16-b9b6-410aad4e89ee.png" />
+
+#### 게시물마다 번호를 달아 저장하려면
+
+1. Auto Increment 구현 (DB의 `_id`를 자동으로 1 증가시켜가며 추가해주세요 - 영구적 할당, `_id=1` 인 data 가 삭제 되었을 때 이후에 추가되는 data 는 `_id=1` 을 가질 수 없음 )
+2. `find` 하는 방법. 내가 원하는 data 찾는 방법
+
+```js
+db.collection('counter').findOne({name : '게시물갯수'}, function(에러, 결과){
+    var 총게시물갯수 = 결과.totalPost;
+}
+```
 
