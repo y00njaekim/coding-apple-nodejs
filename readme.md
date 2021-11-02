@@ -34,6 +34,8 @@
 
 [10. AJAX로 삭제요청하기 3 (jQuery를 이용한 UI 기능) & 여러가지 응답방법](#ajax로-삭제요청하기-3-여러가지-응답방법)
 
+[11. 쇼핑몰처럼 상세페이지를 만들어보자 (URL parameter)](#쇼핑몰처럼-상세페이지를-만들어보자)
+
 
 
 
@@ -426,3 +428,23 @@ app.delete('/delete', (req, res) => {
 ```
 
 3. JQuery 를 이용하여 ejs 에서 특정 ui 를 fade out 할 수 있다.
+
+#### 쇼핑몰처럼 상세페이지를 만들어보자
+
+1. 가장 중요한 건 단 하나의 `detail.ejs` 를 통해 모든 상세페이지를 만든다는 것이다.
+
+```js
+app.get('/detail/:id', (req, res) => {
+  var reqParamsId = parseInt(req.params.id);
+  db.collection('post').findOne({_id: reqParamsId}, (errFindOne, resFindOne) => {
+    if (errFindOne) {
+      res.status(400, {message: '실패했습니다'});
+      return console.log(errFindOne);
+    }
+    res.render('detail.ejs', {data: resFindOne});
+    res.status(200, {message: '성공했습니다'});
+  });
+});
+```
+
+`res.render('detail.ejs', {data: resFindOne})` 을 통해 상세페이지에 전달할 data 만 변경해 준다.

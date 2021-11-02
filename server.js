@@ -79,3 +79,15 @@ app.delete('/delete', (req, res) => {
     res.status(200).send({message: '성공했습니다'});
   });
 });
+
+app.get('/detail/:id', (req, res) => {
+  var reqParamsId = parseInt(req.params.id);
+  db.collection('post').findOne({_id: reqParamsId}, (errFindOne, resFindOne) => {
+    if (errFindOne) {
+      res.status(400, {message: '실패했습니다'});
+      return console.log(errFindOne);
+    }
+    res.render('detail.ejs', {data: resFindOne});
+    res.status(200, {message: '성공했습니다'});
+  });
+});
