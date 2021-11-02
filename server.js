@@ -44,7 +44,7 @@ app.post('/add', (req, res) => {
     if (err) return console.log(err);
     var count = rep.totalPost;
 
-    db.collection('post').insertOne({id: count + 1, name: req.body.title, date: req.body.date}, (err, rep) => {
+    db.collection('post').insertOne({_id: count + 1, name: req.body.title, date: req.body.date}, (err, rep) => {
       if (err) return console.log(err);
       console.log('저장완료');
 
@@ -69,4 +69,9 @@ app.get('/list', (req, res) => {
 
 app.delete('/delete', (req, res) => {
   console.log(req.body);
+  req.body._id = parseInt(req.body._id);
+  db.collection('post').deleteOne({_id: req.body._id}, (errDeleteOne, reqDeleteOne) => {
+    if (errDeleteOne) return console.log(errDeleteOne);
+    console.log('삭제완료');
+  });
 });

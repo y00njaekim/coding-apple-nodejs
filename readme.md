@@ -30,6 +30,8 @@
 
 [8. AJAX로 삭제요청하기 1 (HTML 파일 구성)](#ajax로-삭제요청하기-1)
 
+[9. AJAX로 삭제요청하기 2 (서버는 뭘해야하나)](#ajax로-삭제요청하기-2)
+
 
 
 
@@ -337,3 +339,45 @@ db.collection('counter').findOne({name : '게시물갯수'}, function(에러, �
 </script>
 ```
 
+#### AJAX로 삭제요청하기 2
+
+- React 에서 ajax 사용하는 방법
+
+```react
+import 많은곳;
+import axios from 'axios';
+
+function App(){
+  
+  return (
+    <HTML많은곳/>
+    <button className="btn btn-primary" onClick={()=>{
+
+      axios.get('https://codingapple1.github.io/shop/data2.json')
+      .then((result)=>{ console.log(result.data) })
+      .catch(()=>{ 요청실패시실행할코드 })
+
+    }}>더보기</button>
+  )
+}
+```
+
+- HTML 에서 ajax 사용하는 방법
+
+```react
+    <script>
+      $('.delete').click((event) => {
+        var clickedId = event.target.dataset.id;
+        $.ajax({
+          method : 'DELETE',
+          url: '/delete', // 요청할 경로
+          data: {_id : clickedId} // 요청과 함께 보낼 데이터
+        }).done((res) => {
+        })
+      })
+    </script>
+```
+
+둘을 비교해보았을 때 HTML 에서 사용하는 ajax 가 도대체 어디다가 요청을 하는 건지 헷갈릴 수 있다.
+
+`url: '/delete'` 는 현재 접속해있는 웹 서버 `/delete` 에 요청하는 것임을 기억하자
