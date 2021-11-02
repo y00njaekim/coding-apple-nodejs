@@ -68,10 +68,14 @@ app.get('/list', (req, res) => {
 });
 
 app.delete('/delete', (req, res) => {
-  console.log(req.body);
+  // console.log(req.body);
   req.body._id = parseInt(req.body._id);
-  db.collection('post').deleteOne({_id: req.body._id}, (errDeleteOne, reqDeleteOne) => {
-    if (errDeleteOne) return console.log(errDeleteOne);
+  db.collection('post').deleteOne({_id: req.body._id}, (errDeleteOne, resDeleteOne) => {
+    if (errDeleteOne) {
+      res.status(400).send({message: '실패하였습니다'});
+      return console.log(errDeleteOne);
+    }
     console.log('삭제완료');
+    res.status(200).send({message: '성공했습니다'});
   });
 });

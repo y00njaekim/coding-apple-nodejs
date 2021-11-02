@@ -32,6 +32,8 @@
 
 [9. AJAX로 삭제요청하기 2 (서버는 뭘해야하나)](#ajax로-삭제요청하기-2)
 
+[10. AJAX로 삭제요청하기 3 (jQuery를 이용한 UI 기능) & 여러가지 응답방법](#ajax로-삭제요청하기-3-여러가지-응답방법)
+
 
 
 
@@ -381,3 +383,46 @@ function App(){
 둘을 비교해보았을 때 HTML 에서 사용하는 ajax 가 도대체 어디다가 요청을 하는 건지 헷갈릴 수 있다.
 
 `url: '/delete'` 는 현재 접속해있는 웹 서버 `/delete` 에 요청하는 것임을 기억하자
+
+#### AJAX로 삭제요청하기 3 여러가지 응답방법
+
+1. **서버는** 어떤 **요청에 대하여** **반드시 응답**하여야 한다.
+2. list.ejs 에서 ajax 이후 `done` `fail` 판단은 다음과 같이 발생한다.
+   1. 데이터가 오거나 200 코드가 오면 성공이다
+   2. 데이터가 안오거나 400, 500 코드가 오면 실패이다.
+
+```ejs
+(list.ejs)
+
+<script>
+  $('.delete').click(function(){
+    $.ajax({
+      method : 'DELETE',
+      url : '/delete',
+      data : { _id : e.target.dataset.id }
+    }).done((결과)=>{
+      //AJAX 성공시 실행할 코드적기
+    }).fail((xhr,code,err)=>{
+      //AJAX 실패시 실행할 코드적기
+    });
+  });
+</script>
+```
+
+​	`done` 과 `fail` 을 판단하기 위해 서버는 응답코드를 보내야 한다.
+
+```js
+app.delete('/delete', (req, res) => {
+  req.body._id = parseInt(req.body._id);
+  db.collection('post').deleteOne({_id: req.body._id}, (errDeleteOne, resDeleteOne) => {
+    if (errDeleteOne) {
+      res.status(400).send({message: '실패하였습니다'});
+      return console.log(errDeleteOne);
+    }
+    console.log('삭제완료');
+    res.status(200).send({message: '성공했습니다'});
+  });
+});
+```
+
+3. JQuery 를 이용하여 ejs 에서 특정 ui 를 fade out 할 수 있다.

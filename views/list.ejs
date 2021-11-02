@@ -30,7 +30,7 @@
             <a class="nav-link" href="/write">Write</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">Temp</a>
+            <a class="nav-link" href="/list">List</a>
           </li>
         </ul>
       </div>
@@ -54,11 +54,16 @@
     <script>
       $('.delete').click((event) => {
         var clickedId = event.target.dataset.id;
+        var clickedItem = event.target;
         $.ajax({
           method : 'DELETE',
           url: '/delete', // 요청할 경로
           data: {_id : clickedId} // 요청과 함께 보낼 데이터
         }).done((res) => {
+          console.log('성공했어욤');
+          clickedItem.parent('li').fadeOut();
+        }).fail((xhr, code, err) => {
+          console.log('실패했어욤')
         })
       })
     </script>
