@@ -4,6 +4,8 @@ const app = express();
 app.set('view engine', 'ejs');
 app.use(express.urlencoded({extended: true}));
 
+app.use('/public', express.static('public'));
+
 var db;
 MongoClient.connect('mongodb+srv://keymy00njae:rladbswo12@cluster0.tjh3m.mongodb.net/myFirstDatabase?retryWrites=true&w=majority', (err, client) => {
   db = client.db('todoapp');
@@ -24,7 +26,8 @@ app.get('경로', function (요청, 응답) {
 */
 
 app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/index.html');
+  res.render('index.ejs');
+  // res.sendFile(__dirname + '/index.html');
 });
 
 app.get('/pet', (req, res) => {
@@ -36,7 +39,8 @@ app.get('/beauty', (req, res) => {
 });
 
 app.get('/write', (req, res) => {
-  res.sendFile(__dirname + '/write.html');
+  res.render('write.ejs');
+  // res.sendFile(__dirname + '/write.html');
 });
 
 app.post('/add', (req, res) => {

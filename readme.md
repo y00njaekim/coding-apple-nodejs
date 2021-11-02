@@ -36,6 +36,8 @@
 
 [11. 쇼핑몰처럼 상세페이지를 만들어보자 (URL parameter)](#쇼핑몰처럼-상세페이지를-만들어보자)
 
+[12. (쉬어가기) Bootstrap 디자인 넣기 & HTML 조립식 개발하기](#bootstrap-디자인-넣기-html-조립식-개발하기)
+
 
 
 
@@ -448,3 +450,16 @@ app.get('/detail/:id', (req, res) => {
 ```
 
 `res.render('detail.ejs', {data: resFindOne})` 을 통해 상세페이지에 전달할 data 만 변경해 준다.
+
+❓ 응답코드 확인하려면 브라우져에서 어디 들어가야 되나 ?
+
+#### Bootstrap 디자인 넣기 HTML 조립식 개발하기
+
+1. /public 에는 static files 를 저장한다. 예를 들면, `main.css` 등과 같은 파일들을 저장한다.
+
+2. 미들웨어란 요청과 응답 사이에 동작하는 js 코드로 `app.use('/public', express.static('public'));` 이와 같은 코드로서 존재한다.
+
+❓ 미들웨어란?
+
+
+
