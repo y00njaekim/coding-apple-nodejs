@@ -86,7 +86,9 @@ app.get('/', (req, res) => {
 
 <br/>
 
-❓React `routes` 에서 특정 링크 이동시 특정 컴포넌트 리턴 수행 🆚 nodejs 에서 특정 링크 이동시 특정 파일 `send` 해주는 것의 차이
+❓React `routes` 에서 특정 링크 이동시 특정 컴포넌트 리턴 수행 ([참고](https://github.com/y00njaekim/nwitter/blob/master/src/components/Router.js)) 🆚 nodejs 에서 특정 링크 이동시 특정 파일 `send` 해주는 것의 차이
+
+👏 어떻게 보면 리액트 `routes` 에서 컴포넌트 리턴하는 것이 nodejs 에서 `response.send` 하는 것과 비슷한 거네
 
 #### Bootstrap을 이용한 빠른 UI 개발
 
@@ -155,7 +157,7 @@ app.use(express.urlencoded({extended: true}))
 >
 > 같은 거였는데 바로 이게 서버의 API입니다. 여러분 서버랑 통신할 수 있는 방법이니까요. 
 >
-> write.html을 보고싶으면 /write로 접속하라는 API를 정의하고 계셨던 것입니다. 
+> **write.html을 보고싶으면 /write로 접속하라는 API**를 정의하고 계셨던 것입니다. 
 
 2 . REST API 란? REST 규칙을 모두 충족한 API
 
@@ -174,7 +176,7 @@ app.use(express.urlencoded({extended: true}))
 
 🎯 **Stateless**
 
-요청들은 모두 각각 독립적으로 처리되어야 한다. 요청 1이 성공해야 요청 2를 보내주는 식의 요청 간 의존성이 존재하는 코드를 짜면 안된다. 다르게 말하면, 요청 하나 만으로 자료를 가져오기 충분하도록 요청에 필요한 모든 정보를 실어 보내야 한다.
+요청들은 모두 각각 독립적으로 처리되어야 한다. 요청 1이 성공해야 요청 2를 보내주는 식의 요청 간 의존성이 존재하는 코드를 짜면 안된다. 다르게 말하면, **요청 하나 만으로 자료를 가져오기 충분하도록 요청에 필요한 모든 정보를 실어 보내**야 한다.
 
 🎯 **Cacheable**
 
@@ -303,7 +305,7 @@ db.collection('counter').findOne({name : '게시물갯수'}, function(에러, �
    db.collection('counter').updateOne( {요런 이름의 자료를} , {이렇게 수정해주세요} , function(에러, 결과){  console.log('수정완료') })
    ```
 
-   가운데 인자는 `$` 기호를 통해 operator 를 적용시킬 수 있다. `$set`(변경) , `inc`(증가) , `min`(기존값보다 적을 때만 변경) , `rename`(key값 이름변경) 등 여러 operator 가 존재한다.
+   가운데 인자는 `$` 기호를 통해 operator 를 적용시킬 수 있다. `$set`(변경) , `$inc`(증가) , `$min`(기존값보다 적을 때만 변경) , `rename`(key값 이름변경) 등 여러 operator 가 존재한다.
 
    ```js
    app.post('/add', function (요청, 응답) {
