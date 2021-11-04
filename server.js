@@ -106,10 +106,10 @@ app.get('/edit/:id', (req, res) => {
   });
 });
 
-// app.post('/update/:id', (req, res) => {
-//   var reqParamsId = parseInt(req.params.id);
-//   db.collection('post').updateOne({_id: reqParamsId}, {$set: {name: req.body.title, date: req.body.date}}, (errUpdateOne, resUpdateOne) => {
-//     if (errUpdateOne) return console.log(errUpdateOne);
-//     res.send('전송완료');
-//   });
-// });
+app.put('/edit/:id', (req, res) => {
+  var reqParamsId = parseInt(req.params.id);
+  db.collection('post').updateOne({_id: reqParamsId}, {$set: {name: req.body.title, date: req.body.date}}, (errUpdateOne, resUpdateOne) => {
+    if (errUpdateOne) return console.log(errUpdateOne);
+    res.redirect('/list');
+  });
+});

@@ -42,9 +42,7 @@
 
 [1. 글 수정 기능 1 : /edit 페이지 안내와 method-override](#글-수정-기능-1-:-/edit-페이지-안내와-method-override)
 
-
-
-
+[2. 글 수정 기능 2 : DB 데이터를 수정해보자 (이쯤되면 혼자서도 가능 ㅇㅋ)](#글-수정-기능-2-:-db-데이터를-수정해보자)
 
 
 
@@ -474,3 +472,28 @@ app.get('/detail/:id', (req, res) => {
 #### 글 수정 기능 1 : /edit 페이지 안내와 method-override
 
 ❓ 특정 url 접속해서 수정 권한이 생긴다는게 다소 보안의 위험성이 있다는 거네 ?..
+
+#### 글 수정 기능 2 : DB 데이터를 수정해보자
+
+1. 서버 단 코드에서 다른 method 를 사용하면 같은 url 로 짤 수는 있다. 근데 좋은 코드인지는 모르겠다.
+
+   ```js
+   app.get('/edit/:id', (req, res) => {
+     var reqParamsId = parseInt(req.params.id);
+     db.collection('post').findOne({_id: reqParamsId}, (errFindOne, resFindOne) => {
+       if (errFindOne) return console.log(errFindOne);
+   
+       res.render('edit.ejs', {post: resFindOne, postId: reqParamsId});
+     });
+   });
+   
+   app.put('/edit/:id', (req, res) => {
+     var reqParamsId = parseInt(req.params.id);
+     db.collection('post').updateOne({_id: reqParamsId}, {$set: {name: req.body.title, date: req.body.date}}, (errUpdateOne, resUpdateOne) => {
+       if (errUpdateOne) return console.log(errUpdateOne);
+       res.redirect('/list');
+     });
+   });
+   ```
+
+   
