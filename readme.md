@@ -38,6 +38,12 @@
 
 [12. (쉬어가기) Bootstrap 디자인 넣기 & HTML 조립식 개발하기](#bootstrap-디자인-넣기-html-조립식-개발하기)
 
+#### Part3
+
+[1. 글 수정 기능 1 : /edit 페이지 안내와 method-override](#글-수정-기능-1-:-/edit-페이지-안내와-method-override)
+
+
+
 
 
 
@@ -462,3 +468,9 @@ app.get('/detail/:id', (req, res) => {
 2. 미들웨어란 요청과 응답 사이에 동작하는 js 코드로 `app.use('/public', express.static('public'));` 이와 같은 코드로서 존재한다.
 
 ❓ 미들웨어란?
+
+## Part3
+
+#### 글 수정 기능 1 : /edit 페이지 안내와 method-override
+
+❓ 특정 url 접속해서 수정 권한이 생긴다는게 다소 보안의 위험성이 있다는 거네 ?..

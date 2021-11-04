@@ -48,6 +48,7 @@
             <h4><a href="/detail/<%= posts[i]._id %>">할 일 제목 : <%= posts[i].name %></a></h4>
             <p>할 일 마감 날짜 : <%= posts[i].date %> </p>
             <button class='btn btn-danger delete' data-id="<%= posts[i]._id %>">삭제</button>
+            <button class='btn btn-danger edit' data-id="<%= posts[i]._id %>" onclick="location.href='/edit/<%= posts[i]._id %>'">수정</button>
           </li>
           <% } %>
         </ul>

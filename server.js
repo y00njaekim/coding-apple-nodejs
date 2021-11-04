@@ -1,9 +1,10 @@
 const express = require('express');
 const MongoClient = require('mongodb').MongoClient;
 const app = express();
+const methodOverride = require('method-override');
 app.set('view engine', 'ejs');
 app.use(express.urlencoded({extended: true}));
-
+app.use(methodOverride('_method'));
 app.use('/public', express.static('public'));
 
 var db;
@@ -95,3 +96,20 @@ app.get('/detail/:id', (req, res) => {
     res.status(200, {message: '성공했습니다'});
   });
 });
+
+app.get('/edit/:id', (req, res) => {
+  var reqParamsId = parseInt(req.params.id);
+  db.collection('post').findOne({_id: reqParamsId}, (errFindOne, resFindOne) => {
+    if (errFindOne) return console.log(errFindOne);
+
+    res.render('edit.ejs', {post: resFindOne, postId: reqParamsId});
+  });
+});
+
+// app.post('/update/:id', (req, res) => {
+//   var reqParamsId = parseInt(req.params.id);
+//   db.collection('post').updateOne({_id: reqParamsId}, {$set: {name: req.body.title, date: req.body.date}}, (errUpdateOne, resUpdateOne) => {
+//     if (errUpdateOne) return console.log(errUpdateOne);
+//     res.send('전송완료');
+//   });
+// });
