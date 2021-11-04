@@ -462,6 +462,3 @@ app.get('/detail/:id', (req, res) => {
 2. 미들웨어란 요청과 응답 사이에 동작하는 js 코드로 `app.use('/public', express.static('public'));` 이와 같은 코드로서 존재한다.
 
 ❓ 미들웨어란?
-
-
-
