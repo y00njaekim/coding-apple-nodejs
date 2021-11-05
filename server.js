@@ -113,3 +113,51 @@ app.put('/edit/:id', (req, res) => {
     res.redirect('/list');
   });
 });
+
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
+const session = require('express-session');
+
+// app.use(session({ secret : '세션 만들 때 쓸 비밀 번호' }))
+app.use(session({secret: 'secret code', resave: true, saveUninitialized: false}));
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.get('/login', (req, res) => {
+  res.render('login.ejs');
+});
+
+// 'local 방식으로 회원인지 인증해주세요' 라는 passport.authenticate() 사용 예시
+app.post(
+  '/login',
+  passport.authenticate('local', {
+    failureRedirect: '/fail',
+  }),
+  (req, res) => {
+    res.redirect('/');
+  }
+);
+
+// LocalStrategy => 인증 전략
+passport.use(
+  new LocalStrategy(
+    {
+      usernameField: 'id', // <form> 태그의 name attribute 에 들어가는 string 입력
+      passwordField: 'pw',
+      session: true, // session 정보 저장 유무
+      passReqToCallback: false, // 아이디 비밀번호 말고 다른 정보의 검사 필요 유무.
+    },
+    (filledId, filledPw, done) => {
+      console.log(filledId, filledPw);
+      db.collection('login').findOne({id: filledId}, (err, res) => {
+        if (err) return done(err);
+        if (!res) return done(null, false, {message: '존재하지 않는 아이디입니다'});
+        if (filledPw === res.pw) {
+          return done(null, res);
+        } else {
+          return done(null, false, {message: '비밀번호가 틀렸습니다'});
+        }
+      });
+    }
+  )
+);
