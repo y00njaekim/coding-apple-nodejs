@@ -148,6 +148,7 @@ passport.use(
       passReqToCallback: false, // 아이디 비밀번호 말고 다른 정보의 검사 필요 유무.
     },
     (filledId, filledPw, done) => {
+      // done(서버에러, 성공시 사용자 DB 데이터, 에러메세지)
       console.log(filledId, filledPw);
       db.collection('login').findOne({id: filledId}, (err, res) => {
         if (err) return done(err);
@@ -161,3 +162,14 @@ passport.use(
     }
   )
 );
+
+// user.id 를 이용해서 세션 저장시키는 코드 (로그인 성공시 발동)
+// user 에 들어오는 정보 =  passport.use 의 findOne({req, res}) 에서 res. 즉 찾은 유저 데이터
+passport.serializeUser((user, done) => {
+  done(null, user.id);
+});
+
+// 이 세션 데이터를 가진 사람을 DB 에서 찾아달라고 요청하는 코드 (마이페이지 접속시 발동)
+passport.deserializeUser((id, done) => {
+  done(null, {});
+});

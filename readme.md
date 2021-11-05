@@ -48,6 +48,8 @@
 
 [4. (회원인증기능 1) 로그인 페이지 만들기 & 아이디 비번 검사](#회원인증기능-1-로그인-페이지-만들기-아이디-비번-검사)
 
+[5. (회원인증기능 2) 아이디 비번을 DB와 비교하고 세션 만들어주기](#회원인증기능-2-아이디-비번을-db와-비교하고-세션-만들어주기)
+
 
 
 ## Part1
@@ -469,7 +471,7 @@ app.get('/detail/:id', (req, res) => {
 
 2. 미들웨어란 요청과 응답 사이에 동작하는 js 코드로 `app.use('/public', express.static('public'));` 이와 같은 코드로서 존재한다.
 
-❓ 미들웨어란?
+❓ 미들웨어란 ? [[여기서 확인]](#회원인증기능-1-로그인-페이지-만들기-아이디-비번-검사)
 
 ## Part3
 
@@ -605,4 +607,31 @@ app.post('/login', passport.authenticate('local', {failureRedirect : '/fail'}), 
 
 4 . `LocalStrategy`
 
-**How ?**` LocalStrategy({ 설정 }, function() { 아이디비번 검사하는 코드 })`
+**How ?** ` LocalStrategy({ 설정 }, function() { 아이디비번 검사하는 코드 })`
+
+#### 회원인증기능 2 아이디 비번을 DB와 비교하고 세션 만들어주기
+
+1 . 쿠키 확인 위치
+
+개발자도구 > Application > Cookies
+
+<br/>
+
+❓근데
+
+```js
+app.post(
+  '/login',
+  passport.authenticate('local', {
+    failureRedirect: '/fail',
+  }),
+  (req, res) => {
+    res.redirect('/');
+  }
+);
+
+passport.use( ...
+)
+```
+
+여기서 두 번째 파라미터로 passport 가 실행되고 아마 그 때, passport.use(미들웨어) 실행할 텐데 그 안에서 req.body.id ( = `filledId` ) , req.body.pw ( = `filledPw` ) 를 어떻게 알고 참조해서 사용하는 거지 ?
