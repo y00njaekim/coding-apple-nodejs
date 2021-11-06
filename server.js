@@ -2,6 +2,8 @@ const express = require('express');
 const MongoClient = require('mongodb').MongoClient;
 const app = express();
 const methodOverride = require('method-override');
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
 app.set('view engine', 'ejs');
 app.use(express.urlencoded({extended: true}));
 app.use(methodOverride('_method'));
@@ -160,11 +162,13 @@ passport.use(
       db.collection('login').findOne({id: filledId}, (err, res) => {
         if (err) return done(err);
         if (!res) return done(null, false, {message: '존재하지 않는 아이디입니다'});
-        if (filledPw === res.pw) {
-          return done(null, res);
-        } else {
-          return done(null, false, {message: '비밀번호가 틀렸습니다'});
-        }
+        bcrypt.compare(filledPw, res.pw, function (err, result) {
+          if (result) {
+            return done(null, res);
+          } else {
+            return done(null, false, {message: '비밀번호가 틀렸습니다'});
+          }
+        });
       });
     }
   )
@@ -180,5 +184,24 @@ passport.serializeUser((user, done) => {
 passport.deserializeUser((id, done) => {
   db.collection('login').findOne({id: id}, (errFindOne, resFindOne) => {
     done(null, resFindOne);
+  });
+});
+
+app.get('/register', (req, res) => {
+  res.render('register.ejs');
+});
+
+app.post('/register', (req, res) => {
+  db.collection('login').findOne({id: req.body.id}, (errFindOne, resFindOne) => {
+    if (errFindOne) return console.log(errFindOne);
+    if (resFindOne) res.send('이미 존재하는 아이디 입니다');
+    bcrypt.hash(req.body.pw, saltRounds, (errHash, hash) => {
+      // Store hash in your password DB.
+      if (errHash) return console.log(errHash);
+      db.collection('login').insertOne({id: req.body.id, pw: hash}, (errInsertOne, resInsertOne) => {
+        if (errInsertOne) return console.log(errInsertOne);
+        res.redirect('/login');
+      });
+    });
   });
 });

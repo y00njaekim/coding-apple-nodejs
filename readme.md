@@ -688,3 +688,8 @@ passport.use( ...
 
 \- express-session 라이브러리는 세션이 많아지면 서버의 메모리를 많이 잡아먹기 때문에 connect-mongo 등의 라이브러리로 DB에 세션데이터를 저장해서 사용하기 
 
+#### 회원가입 페이지 만들기
+
+1. npm bycrypt 이용 [[공식문서]](https://www.npmjs.com/package/bcrypt)
+
+   
