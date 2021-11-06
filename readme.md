@@ -50,6 +50,8 @@
 
 [5. (회원인증기능 2) 아이디 비번을 DB와 비교하고 세션 만들어주기](#회원인증기능-2-아이디-비번을-db와-비교하고-세션-만들어주기)
 
+[6. (회원인증기능 3) 로그인 유저만 접속할 수 있는 페이지 만들기](#회원인증기능-3-로그인-유저만-접속할-수-있는-페이지-만들기)
+
 
 
 ## Part1
@@ -575,9 +577,11 @@ app.get('/detail/:id', (req, res) => {
 
 실제 서비스 시 express-session 말고 MongoDB에 세션데이터를 저장해주는 라이브러리를 사용하는 것을 추천 !
 
-2 . 미들웨어란 ?
+2 . ❓ 미들웨어란 ?
 
 **What ?** 웹사이트는 요청-응답해주는 프로그램. 이 때 요청-응답 중간에 실행시키는 코드가 미들웨어.
+
+> Middleware functions are functions that have **access to the request object** (req), the response object (res), and **the next function** in the application’s request-response cycle.
 
 **Why ?** 보통 요청이 적법한지 검사하는 기능 등을 미들웨어에 많이 담는다.
 
@@ -594,6 +598,23 @@ app.use(passport.session());
 ```
 
 위 코드 중 `passport.initialize()` , `passport.session()` 는 **모든** 요청과 응답 중간에 실행된다.
+
+---
+
+**referene**
+
+[미들웨어 정의 및 유형](https://psyhm.tistory.com/8)
+
+> - 모든 코드를 실행
+> - 다음 미들웨어 호출(미들웨어가 순차적으로 실행)
+> - res, req 객체 변경 가능
+> - 요청-응답 주기를 종료(response methods를 이용)
+
+[모듈과 미들웨어 개념](https://jinbroing.tistory.com/126)
+
+> - 4. 미들웨어 함수 우선순위 : 먼저 로드되는 미들웨어 함수가 먼저 실행됨(코드 순서 중요)
+
+---
 
 3 . `app.post()` 새로운 파라미터.
 
@@ -634,4 +655,36 @@ passport.use( ...
 )
 ```
 
-여기서 두 번째 파라미터로 passport 가 실행되고 아마 그 때, passport.use(미들웨어) 실행할 텐데 그 안에서 req.body.id ( = `filledId` ) , req.body.pw ( = `filledPw` ) 를 어떻게 알고 참조해서 사용하는 거지 ?
+여기서 두 번째 파라미터로 `passport` 가 실행되고 아마 그 때, `passport.use(미들웨어)` 실행할 텐데 그 안에서 `req.body.id` ( = `filledId` ) , `req.body.pw` ( = `filledPw` ) 를 어떻게 알고 참조해서 사용하는 거지 ?
+
+✋ 지금 추측 :
+
+1. 아마 미들웨어에서 `req` 을 참조할 수 있을 거임.
+2. `LocalStrategy` 에 우리가 `usernameField` 를 넘겨 줬음.
+3. `usernameField` 를 이용해서 `req.body.usernameField` 등으로 참조할 수 있을 거임.
+4. 그렇게 나온 결과를 `filledId` 에 넣을 수 있을 것임.
+
+#### 회원인증기능 3 로그인 유저만 접속할 수 있는 페이지 만들기
+
+1. 혼자 횡설수설하며 정리해본 영상
+   - 3-6. middle ware 이해 하려고 횡설수설 [[유튜브]](https://youtu.be/i3S-cwuiXxg3-6)
+   - 3-6. passport 와 session 을 비롯한 middle ware 이해 [[유튜브]](https://youtu.be/kWk9MEJ1-O4)
+
+---
+
+**Q. 실제 서버 제작을 위해 신경쓰거나 더 공부해봐야할 사항들이 있나요?** 
+
+\- 디자인, UI 개발, IE 호환성, 반응형 웹 등 프론트엔드 내용
+
+\- 악성 유저가 아이디를 너무 길거나 이상하게 적으면 어떻게 할지 (직접 악성 유저가 되어 이것저것 테스트해보시면 됩니다)
+
+\- DB에 저장하기 전에 빈칸이 없는지, 길이가 너무 길지 않은지 정규식과 if문으로 검증하기 
+
+\- helmet 라이브러리 등으로 보안 약간 더하기
+
+\- 이미지 업로드 등 서버에서 이미지 처리하기 (압축, 저장, 리사이즈 등)
+
+\- Oauth 등 다른 로그인 방식 도입해보기
+
+\- express-session 라이브러리는 세션이 많아지면 서버의 메모리를 많이 잡아먹기 때문에 connect-mongo 등의 라이브러리로 DB에 세션데이터를 저장해서 사용하기 
+

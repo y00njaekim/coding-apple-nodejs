@@ -31,14 +31,6 @@ app.get('/', (req, res) => {
   // res.sendFile(__dirname + '/index.html');
 });
 
-app.get('/pet', (req, res) => {
-  res.send('펫 용품 쇼핑할 수 있는 페이지입니다');
-});
-
-app.get('/beauty', (req, res) => {
-  res.send('뷰티 용품 쇼핑할 수 있는 페이지입니다');
-});
-
 app.get('/write', (req, res) => {
   res.render('write.ejs');
   // res.sendFile(__dirname + '/write.html');
@@ -138,6 +130,20 @@ app.post(
   }
 );
 
+// 커스텀 미들웨어 isLoginned
+const isLoginned = (req, res, next) => {
+  if (req.user) {
+    next();
+  } else {
+    res.send('로그인 안하셨는 데요?');
+  }
+};
+
+app.get('/mypage', isLoginned, (req, res) => {
+  console.log(req.user);
+  res.render('mypage.ejs', {user: req.user});
+});
+
 // LocalStrategy => 인증 전략
 passport.use(
   new LocalStrategy(
@@ -149,6 +155,7 @@ passport.use(
     },
     (filledId, filledPw, done) => {
       // done(서버에러, 성공시 사용자 DB 데이터, 에러메세지)
+      console.log('passport.use local 어쩌구');
       console.log(filledId, filledPw);
       db.collection('login').findOne({id: filledId}, (err, res) => {
         if (err) return done(err);
@@ -163,13 +170,15 @@ passport.use(
   )
 );
 
-// user.id 를 이용해서 세션 저장시키는 코드 (로그인 성공시 발동)
-// user 에 들어오는 정보 =  passport.use 의 findOne({req, res}) 에서 res. 즉 찾은 유저 데이터
+// `user` 에 들어오는 정보 =  passport.use 의 findOne({req, res}) 에서 res. 즉 찾은 유저 데이터
+// 그렇게 찾은 `user` 를 참조 후 `user.id` 를 이용해서 세션 저장시키는 코드 (로그인 성공시 발동)
 passport.serializeUser((user, done) => {
   done(null, user.id);
 });
 
-// 이 세션 데이터를 가진 사람을 DB 에서 찾아달라고 요청하는 코드 (마이페이지 접속시 발동)
+// 로그인한 유저의 세션아이디를 바탕으로 개인정보를 DB에서 찾는 역할 (마이페이지 접속시 발동)
 passport.deserializeUser((id, done) => {
-  done(null, {});
+  db.collection('login').findOne({id: id}, (errFindOne, resFindOne) => {
+    done(null, resFindOne);
+  });
 });
