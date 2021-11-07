@@ -206,3 +206,13 @@ app.post('/register', (req, res) => {
     });
   });
 });
+
+app.get('/search', (req, res) => {
+  console.log(req.query.value);
+  db.collection('post')
+    .find({name: req.query.value})
+    .toArray((err, rep) => {
+      if (err) return console.log(err);
+      res.render('search.ejs', {posts: rep, search: req.query.value});
+    });
+});

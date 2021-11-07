@@ -52,6 +52,8 @@
 
 [6. (회원인증기능 3) 로그인 유저만 접속할 수 있는 페이지 만들기](#회원인증기능-3-로그인-유저만-접속할-수-있는-페이지-만들기)
 
+[8.검색기능 만들기 1 : URL query string](#검색기능-만들기-1-url-query-string)
+
 
 
 ## Part1
@@ -692,4 +694,14 @@ passport.use( ...
 
 1. npm bycrypt 이용 [[공식문서]](https://www.npmjs.com/package/bcrypt)
 
-   
+
+#### 검색기능 만들기 1 URL query string
+
+1. 검색 데이터를 서버에 보내야 내가 무얼 검색했는지 알 수 있다. 때문에 보통 이런 경우 `post` 요청을 하기 마련이다. 하지만 우리가 이번에 할 작업은 `get` 요청만으로 내가 무얼 검색했는지 서버에 넘겨주는 작업이다. 바로 `get` 요청이 들어가는 주소에 정보를 몰래 담는 것이다.
+
+   `/search?value=내가검색한거`
+
+2. 이런 작업을 query string, query parameter 라고 한다.
+3. 이 때 `server.js` 에서 실행되는 요청은 `/search` 의 미들웨어 Path 를 가진 부분이다. 그렇다면 `?` 와 함께 보낸 정보는 어디로 갔을까 ? 바로 `req.query` 에 들어있다.
+
+4. `list.ejs` 에서는 `get` 요청을 따로 할 필요 없이 url 만 갈아 치우면 된다. `window.location.replace('/search?value=' + value)` 와 같이 말이다. 
