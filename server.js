@@ -4,20 +4,21 @@ const app = express();
 const methodOverride = require('method-override');
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
+require('dotenv').config();
 app.set('view engine', 'ejs');
 app.use(express.urlencoded({extended: true}));
 app.use(methodOverride('_method'));
 app.use('/public', express.static('public'));
 
 var db;
-MongoClient.connect('mongodb+srv://keymy00njae:rladbswo12@cluster0.tjh3m.mongodb.net/myFirstDatabase?retryWrites=true&w=majority', (err, client) => {
+MongoClient.connect(process.env.DB_URL, (err, client) => {
   db = client.db('todoapp');
   // db.collection('post').insertOne({name: 'John', age: 20}, (err, rep) => {
   //   console.log('저장완료');
   // });
 
   // 8080 포트를 통해 '들어오는' 상황의 callback function
-  app.listen(8080, function () {
+  app.listen(process.env.PORT, function () {
     console.log('listening on 8080');
   });
 });
