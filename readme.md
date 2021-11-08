@@ -56,6 +56,8 @@
 
 [9. 검색기능 만들기 2 : 게시물이 100만개일 때 쓰는 indexing 개념설명](#검색기능-만들기-2-게시물이 100만개일-때-쓰는-indexing-개념설명)
 
+[10. 검색기능 만들기 3 : 네이버같은 검색기능 만들려면 (Search index)](#검색기능-만들기-3-네이버같은-검색기능-만들려면-search-index)
+
 
 
 ## Part1
@@ -717,3 +719,89 @@ passport.use( ...
 2. 그런데 정규식을 써도 임시방편일 뿐. 왜냐하면 검색할 대상의 데이터가 많으면 검색하는 데에 시간이 너무 많이 소요됨.
    - 이 때 필요한 게 **indexing** - indexing 을 해두면 binary search 를 할 수 있음. 즉 indexing 이란 미리 정렬해 둔 사본(참고용) 을 만들어 두는 것. 인덱싱은 웹(mongo atlas) 으로도 할 수 있고 cli 로 할 수도 있음.
    - 하지만, 인덱싱과 정규식은 다소 관련이 없음. 인덱싱은 맨 앞 글자부터 기준 삼아 정렬하는 것. 하지만 정규식은 특정 문자가 포함된 모든 경우를 탐색 해야하니까 중간에 있는 문자를 찾으려 할 때, 인덱싱의 정보를 이용할 수 없음.
+
+#### 검색기능 만들기 3 네이버같은 검색기능 만들려면 Search index
+
+1 . 쿼리스트링 만드는 방법
+
+- `object` ➡️ `query string` :  `$.param(object)`
+  - `key1=value1&key2=value2` 등의 값
+- `<form>` ➡️ `query string` : `$(폼태그).serialize()`
+  - `<input>` 의 `name1=value1&name2=value2` 등의 값
+
+2 . 기본적인 **indexing** 사용 방법
+
+- indexing 없이 `find`
+
+  - `db.collection('post').find({ name: req.query.value })`
+
+    - `post` 라는 collection 에서 `name` 필드가 `req.query.value` 인 doc 찾기
+
+  - `db.collection('post').find( { $text : { $search: req.query.value } } )`
+
+    - `post` 라는 collection 에 `text` 인덱스를 미리 만들어 놓았는데, 여기서 그 값이 `req.query.value` 인 doc 찾기
+      - ❓`req.query.value` 가 어떤 필드에 해당하는 값인지는 컴퓨터가 어떻게 앎?
+      - ❓ `$search` 는 뭔 뜻이야?
+
+    - 이렇게 인덱스 만들어 놓으면 구글 검색 엔진과 같이 기능함.
+
+- text index 만들어 사용하면 사용 가능한 기능
+  - 빠른 검색
+  - or 검색기능
+  - '-' 제외 가능
+  - "" 정확히 일치하는 것만
+
+3. 비 한글 친화적인 인덱싱 문제를 해결
+
+   - 한글에 친화적이지 않은 이유 : text 인덱스 만들 때 띄어쓰기 기준으로 단어 저장하는데 한글은 조사가 있어서 문제 발생.
+
+   - 해결방법
+
+     1. indexing 안하기
+
+        - 그대신 검색에 제한 두기 (맨 앞 1000개 중에서만 찾기 등). 개수 줄어들면 굳이 뭐 인덱스 안써도 되니까. 개수 제한을 둘 때 보통 우선도가 높은 순으로 선정하는 데 그 기준을 날짜 등으로 설정.
+        - `skip()`, `limit()` 이런 함수를 이용하시면 pagination 기능
+
+     2. custom indexing 하기
+
+        - text index 만들 때 이를 테면 글자 두개 단위의 indexing 만들기 (ngram). mongoDB 에서 커스텀 인덱싱 지원 안함.
+
+     3. search indexing 하기
+
+        - 몽고 디비에서 search index 를 만들 수 있음 -> 한글 친화적
+
+        - `aggregate` 사용.
+
+        - `aggregate([][][조건1], [조건2], [조건3])`
+
+          ```js
+          var 검색조건 = [
+            {
+              $search : {
+                index: 'titleSearch', // 인덱스명
+                text: {
+                  query: req.query.value, // 쿼리 스트링
+                  path: "name" // 제목 날짜 둘다 찾고싶으면 ["title", "date" ]
+                }
+              }
+            },
+            { $sort : { _id : 1} }, // 1 이면 오름 -1 이면 내림
+            { $limit : 10 }, // 상위 몇개?
+            { $project : {제목: 1, _id: 0, score: { $meta: "searchScore" } } } // 검색 결과로서 제목은 가져오고 _id 는 안가져오고 그럼. searchScroe 은 몽고아틀라스에서 알아서 나의 검색어와 결과간의 연관성을 기준으로 매기는 점수. $sort 안쓰면 이걸로 정렬해줌.
+          ]
+          
+          db.collection('post').aggregate(검색조건).toArray((err, res) => {
+            res.render("search.ejs", {posts: res})
+          })
+          ```
+
+---
+
+❓ 엔그램(nGram) 이란?
+
+❓ `req.query.value` 에 2개 이상 query string 들어가면 어떻게 출력되는지 확인하기
+
+
+
+
+
