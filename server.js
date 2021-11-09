@@ -39,47 +39,6 @@ app.get('/write', (req, res) => {
   // res.sendFile(__dirname + '/write.html');
 });
 
-app.post('/add', (req, res) => {
-  db.collection('counter').findOne({name: 'numOfPosts'}, (err, rep) => {
-    if (err) return console.log(err);
-    var count = rep.totalPost;
-
-    db.collection('post').insertOne({_id: count + 1, name: req.body.title, date: req.body.date}, (err, rep) => {
-      if (err) return console.log(err);
-      console.log('저장완료');
-
-      db.collection('counter').updateOne({name: 'numOfPosts'}, {$inc: {totalPost: 1}}, (err, rep) => {
-        if (err) return console.log(err);
-      });
-
-      res.send('전송완료');
-    });
-  });
-});
-
-app.get('/list', (req, res) => {
-  db.collection('post')
-    .find()
-    .toArray((err, rep) => {
-      if (err) return console.log(err);
-      // console.log(rep);
-      res.render('list.ejs', {posts: rep});
-    });
-});
-
-app.delete('/delete', (req, res) => {
-  // console.log(req.body);
-  req.body._id = parseInt(req.body._id);
-  db.collection('post').deleteOne({_id: req.body._id}, (errDeleteOne, resDeleteOne) => {
-    if (errDeleteOne) {
-      res.status(400).send({message: '실패하였습니다'});
-      return console.log(errDeleteOne);
-    }
-    console.log('삭제완료');
-    res.status(200).send({message: '성공했습니다'});
-  });
-});
-
 app.get('/detail/:id', (req, res) => {
   var reqParamsId = parseInt(req.params.id);
   db.collection('post').findOne({_id: reqParamsId}, (errFindOne, resFindOne) => {
@@ -117,6 +76,45 @@ const session = require('express-session');
 app.use(session({secret: 'secret code', resave: true, saveUninitialized: false}));
 app.use(passport.initialize());
 app.use(passport.session());
+
+app.post('/add', (req, res) => {
+  db.collection('counter').findOne({name: 'numOfPosts'}, (err, rep) => {
+    if (err) return console.log(err);
+    var count = rep.totalPost;
+    var insertObj = {_id: count + 1, writer: req.user._id, name: req.body.title, date: req.body.date};
+
+    db.collection('post').insertOne(insertObj, (err, rep) => {
+      if (err) return console.log(err);
+      console.log('저장완료');
+
+      db.collection('counter').updateOne({name: 'numOfPosts'}, {$inc: {totalPost: 1}}, (err, rep) => {
+        if (err) return console.log(err);
+      });
+
+      res.redirect('/list');
+    });
+  });
+});
+
+app.delete('/delete', (req, res) => {
+  // console.log(req.body);
+  req.body._id = parseInt(req.body._id);
+  var deleteObj = {_id: req.body._id, writer: req.user._id};
+  // var deleteObj = {_id: req.body._id};
+  db.collection('post').deleteOne(deleteObj, (errDeleteOne, resDeleteOne) => {
+    if (errDeleteOne) {
+      res.status(400).send({message: 'server.js - error in deleting'});
+      return console.log(errDeleteOne);
+    }
+    if (resDeleteOne.deletedCount == 0) {
+      res.status(400).send({message: 'server.js - not have permission to delete'});
+      return console.log('server.js - console.log - not have permission to delete');
+    }
+    console.log('server.js - console.log - success for deleting');
+    // console.log(resDeleteOne);
+    res.status(200).send({message: 'server.js - success for deleting'});
+  });
+});
 
 app.get('/login', (req, res) => {
   res.render('login.ejs');
@@ -201,10 +199,30 @@ app.post('/register', (req, res) => {
       if (errHash) return console.log(errHash);
       db.collection('login').insertOne({id: req.body.id, pw: hash}, (errInsertOne, resInsertOne) => {
         if (errInsertOne) return console.log(errInsertOne);
-        res.redirect('/login');
+        res.redirect('/');
       });
     });
   });
+});
+
+app.get('/list', (req, res) => {
+  if (!req.user) {
+    db.collection('post')
+      .find()
+      .toArray((err, rep) => {
+        if (err) return console.log(err);
+        // console.log(rep);
+        res.render('list.ejs', {posts: rep, loginUser: null});
+      });
+  } else {
+    db.collection('post')
+      .find()
+      .toArray((err, rep) => {
+        if (err) return console.log(err);
+        // console.log(rep);
+        res.render('list.ejs', {posts: rep, loginUser: req.user});
+      });
+  }
 });
 
 app.get('/search', (req, res) => {

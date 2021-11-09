@@ -62,8 +62,17 @@
           <li class="list-group-item">
             <h4><a href="/detail/<%= posts[i]._id %>">할 일 제목 : <%= posts[i].name %></a></h4>
             <p>할 일 마감 날짜 : <%= posts[i].date %> </p>
-            <button class='btn btn-danger delete' data-id="<%= posts[i]._id %>">삭제</button>
-            <button class='btn btn-danger edit' data-id="<%= posts[i]._id %>" onclick="location.href='/edit/<%= posts[i]._id %>'">수정</button>
+            <% console.log('haha'); %>
+            <% if(posts[i].writer) { %>
+              <% console.log(posts[i].writer.toString()); %>
+              <% if(loginUser) { %>
+                <% console.log(loginUser._id.toString()); %>
+                <% if(posts[i].writer.toString() === loginUser._id.toString()) { %>
+                  <button class='btn btn-danger delete' data-id="<%= posts[i]._id %>">삭제</button>
+                  <button class='btn btn-danger edit' data-id="<%= posts[i]._id %>" onclick="location.href='/edit/<%= posts[i]._id %>'">수정</button>
+                <% } %>
+              <% } %>
+            <% } %>
           </li>
           <% } %>
         </ul>
@@ -87,10 +96,11 @@
             data: {_id : clickedId} // 요청과 함께 보낼 데이터
           }).done((res) => {
             document.querySelector('.modal').style.display = 'none';
-            console.log('성공했어욤');
+            console.log('list.ejs - success for deleting');
             $(clickedItem).parent('li').fadeOut();
           }).fail((xhr, code, err) => {
-            console.log('실패했어욤')
+            document.querySelector('.modal').style.display = 'none';
+            console.log('list.ejs - fail for deleting')
           })
         })
       })
