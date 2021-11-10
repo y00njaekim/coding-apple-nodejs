@@ -1,6 +1,7 @@
 const express = require('express');
 const MongoClient = require('mongodb').MongoClient;
 const app = express();
+const path = require('path');
 const methodOverride = require('method-override');
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
@@ -252,3 +253,40 @@ app.get('/search', (req, res) => {
 // router 폴더와 파일을 만들어 API들 관리하기 연습 //
 app.use('/shop', require('./routes/shop'));
 app.use('/board/sub', require('./routes/board'));
+
+app.get('/upload', (req, res) => {
+  res.render('upload.ejs');
+});
+
+let multer = require('multer');
+var storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, './public/image');
+  },
+  filename: (req, file, cb) => {
+    cb(null, file.originalname);
+  },
+});
+
+var upload = multer({
+  storage: storage,
+  fileFilter: (req, file, callback) => {
+    var ext = path.extname(file.originalname);
+    if (ext !== '.png' && ext !== '.jpg' && ext !== '.jpeg') {
+      return callback(new Error('PNG, JPG만 업로드하세요'));
+    }
+    callback(null, true);
+  },
+  limits: {
+    fileSize: 1024 * 1024, // 1 mb 를 뜻함.
+  },
+});
+
+app.post('/upload', upload.single('profile'), (req, res) => {
+  res.send('완료');
+});
+
+app.get('/image/:imgName', (req, res) => {
+  var imgName = req.params.imgName;
+  res.sendFile(__dirname + '/public/image/' + imgName);
+});
