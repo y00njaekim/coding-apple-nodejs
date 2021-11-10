@@ -248,3 +248,7 @@ app.get('/search', (req, res) => {
       res.render('search.ejs', {posts: rep, search: req.query.value});
     });
 });
+
+// router 폴더와 파일을 만들어 API들 관리하기 연습 //
+app.use('/shop', require('./routes/shop'));
+app.use('/board/sub', require('./routes/board'));

@@ -60,6 +60,8 @@
 
 [11. 회원 기능을 포함한 게시판 기능](#회원-기능을-포함한-게시판-기능)
 
+[12. router 폴더와 파일을 만들어 API들 관리하기](#router-폴더와-파일을-만들어-api들-관리하기)
+
 
 
 ## Part1
@@ -607,6 +609,10 @@ app.use(passport.session());
 
 위 코드 중 `passport.initialize()` , `passport.session()` 는 **모든** 요청과 응답 중간에 실행된다.
 
+🎯 [[유튜브 영상]](#회원인증기능-3-로그인-유저만-접속할-수-있는-페이지-만들기) 을 확인하자.
+
+🎯 (21.11.10 추가) 모든 요청과 응답 사이에 항상 동작하는 미들웨어를 **전역 미들웨어** 라고 부른다.
+
 ---
 
 **referene**
@@ -837,3 +843,21 @@ passport.use( ...
 *이런게 보안잡는거지 보안은 어렵고 그런거 아닙니다.*
 
 <br/>
+
+#### router 폴더와 파일을 만들어 API들 관리하기
+
+1 . 라우팅을 하기 위한 경로 설정은 시작(`nodemon server.js`) 과 동시에 된다. 어떻게 알 수 있냐면, routes > shop.js 에 `console.log()` 찍은 게 시작과 동시에 출력되기 때문이다.
+
+2 . `app.use('/test', require('./routes/test'))` 하고 routes > test. js 에 `app.get('/shop/shirts', (req, res) => {})` 가 있다면 해당 요청을 보내기 위해 우리는 `/test/shop/shirts` 에 요청을 해야 한다.
+
+3 . 라우터는 라우트 해주는 주체. 라우트는 동사. 라우팅은 동사의 명사 형태
+
+4 . 공식 document 는 **express** 문서를 살펴보아야 할 듯.
+
+5 . `module.exports = 변수명`, `require('./파일경로')` 는 js 신문법인 `import` `export` 로 대체 가능하다.
+
+❓ app.use() 와 app.get() 의 차이 
+
+🤔 [[참고1]](https://goodgid.github.io/Node-use-vs-get/)
+
+❓ app.use(패스, require) 사실 잘 모르겠음. 어떤 원리인지 잘 모르겠음.
