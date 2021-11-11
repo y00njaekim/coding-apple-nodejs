@@ -237,6 +237,8 @@ app.use(express.urlencoded({extended: true}))
 - 파일 확장자 쓰지 말기
 - 하위 문서들을 뜻할 땐 / 기호를 사용
 
+🎯 노마드 코더 왈 : NO VERB! [[유튜브]](https://www.youtube.com/watch?v=4DxHX95Lq2U)
+
 <br/>
 
 ## Part2
