@@ -565,6 +565,10 @@ app.get('/detail/:id', (req, res) => {
 
 🤔 왜인지는 모르겠지만 좀 더 stateless (restful) 한 방법이라고 한다.
 
+🤔 [[니코쌤 유튜브: 세션 vs 토큰 vs JWT]](https://www.youtube.com/watch?v=tosLBcAX1vk&t=203s)
+
+​	❓ JWT 가 그냥 만능 열쇠 ? 서명된 정보? 정도를 제공하는 것이면 그 사용자가 누구인지 확인할 수 없는건가? mypage 등에 어떤 정보를 올릴지 결정할 판단 근거로 기능할 수 있나?
+
 <br/>
 
 3.Open authentication (OAuth)
@@ -862,7 +866,7 @@ passport.use( ...
 
 🤔 [[참고1]](https://goodgid.github.io/Node-use-vs-get/)
 
-❓ app.use(패스, require) 사실 잘 모르겠음. 어떤 원리인지 잘 모르겠음.
+❓ app.use(패스, require) 사실 잘 모르겠음. 어떤 원리인지 잘 모르겠음. [[모르는거 주저리 주저리 하는 영상]](https://youtu.be/zXDCHrdZTlU)
 
 #### 이미지 업로드 & 이미지 서버 만들기
 
