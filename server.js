@@ -1,6 +1,7 @@
 const express = require('express');
 const MongoClient = require('mongodb').MongoClient;
 const app = express();
+const {v4: uuidv4} = require('uuid');
 const path = require('path');
 const methodOverride = require('method-override');
 const bcrypt = require('bcrypt');
@@ -44,11 +45,11 @@ app.get('/detail/:id', (req, res) => {
   var reqParamsId = parseInt(req.params.id);
   db.collection('post').findOne({_id: reqParamsId}, (errFindOne, resFindOne) => {
     if (errFindOne) {
-      res.status(400, {message: '실패했습니다'});
+      res.status(400).send({message: '실패했습니다'});
       return console.log(errFindOne);
     }
     res.render('detail.ejs', {data: resFindOne});
-    res.status(200, {message: '성공했습니다'});
+    res.status(200).send({message: '성공했습니다'});
   });
 });
 
@@ -289,4 +290,60 @@ app.post('/upload', upload.single('profile'), (req, res) => {
 app.get('/image/:imgName', (req, res) => {
   var imgName = req.params.imgName;
   res.sendFile(__dirname + '/public/image/' + imgName);
+});
+
+const isNewChat = (req, res, next) => {
+  console.log('isnewchat');
+  var member = [req.body.writer, req.body.chatter].sort();
+  db.collection('chat').findOne({member: member}, (errFindOne, resFindOne) => {
+    if (errFindOne) {
+      res.status(400).send({message: '실패하였습니다'});
+      return console.log(errFindOne);
+    }
+    var _id = uuidv4();
+    if (!resFindOne) {
+      console.log('not found');
+      req.chatRoomId = _id;
+      next();
+    } else {
+      console.log('found');
+      res.status(200).send({chatRoomId: resFindOne._id, message: '채팅방이 이미 존재하여 연결합니다'});
+    }
+  });
+};
+
+app.post('/chat', isNewChat, (req, res) => {
+  console.log('post');
+  var insertObj = {
+    _id: req.chatRoomId,
+    member: [req.body.writer, req.body.chatter].sort(),
+    date: new Date(),
+  };
+  db.collection('chat').insertOne(insertObj, (errInsertOne, resInsertOne) => {
+    if (errInsertOne) return console.log(errInsertOne);
+    res.status(200).send({chatRoomId: _id, message: '채팅방이 존재하지 않아 생성합니다'});
+  });
+});
+
+app.get('/chat/:room', (req, res) => {
+  console.log('get chat room');
+  var room = req.params.room;
+  db.collection('message')
+    .find({room: room})
+    .toArray((errFind, resFind) => {
+      res.render('chat.ejs', {room: room, messages: resFind});
+    });
+});
+
+app.post('/chat/send/:room', (req, res) => {
+  var room = req.params.room;
+  var insertObj = {
+    room: room,
+    content: req.body.msg,
+    date: new Date(),
+  };
+  db.collection('message').insertOne(insertObj, (errInsertOne, resInsertOne) => {
+    if (errInsertOne) return console.log(errInsertOne);
+    res.redirect('back');
+  });
 });

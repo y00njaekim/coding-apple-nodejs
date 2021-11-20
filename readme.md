@@ -66,6 +66,16 @@
 
 [15. 쇼핑몰 등 실제 서비스 만들 때 자주묻는 질문들](#쇼핑몰-등-실제-서비스-만들-때-자주묻는-질문들)
 
+[16. 유저간 채팅기능 만들기 1. 채팅방 만들기](#유저간-채팅기능-만들기-1-채팅방-만들기)
+
+#### Issue
+
+[AJAX 사용 시 res.redirect 사용하면 안돼요](https://stackoverflow.com/questions/27202075/expressjs-res-redirect-not-working-as-expected)
+
+✔️ `ajax().done()` 에서 `done` 뒤에 parameter 들을 잘 이용해야 함.
+
+🙋‍♂️ `done(res)` 에서 `res` 는 server.js 에서 `res.status(200).send({obj})` 의 obj 에 해당하는 것으로 추측
+
 ## Part1
 
 #### 두근두근 내 첫서버에서 GET 요청을 처리해보자
@@ -621,6 +631,12 @@ app.use(passport.session());
 
 🎯 (21.11.10 추가) 모든 요청과 응답 사이에 항상 동작하는 미들웨어를 **전역 미들웨어** 라고 부른다.
 
+🎯 (21.11.20 추가) middleware 에 parameter 넣기 [[링크]](https://tsmx.net/express-middleware-function-with-custom-parameters/)
+
+​	포인트 1. wrap 하기.
+
+​	포인트 2. req 에 parameter 를 이용한 결과를 넣기. over-riding 안되게끔 변수명 설정 유의.
+
 ---
 
 **referene**
@@ -916,5 +932,7 @@ passport.use( ...
 - OAuth 소셜 로그인
 - 서버 컴퓨터 메모리 터짐을 방지하기 위해 세션 데이터를 서버 메모리가 아니라 mongoDB 에 저장하는 법
 
+#### 유저간 채팅기능 만들기 1 채팅방 만들기
 
+<img src="https://user-images.githubusercontent.com/56385667/142398291-94ebdfc3-9cfe-4511-89fe-0d5ebc420462.png" />
 

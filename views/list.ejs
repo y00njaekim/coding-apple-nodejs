@@ -62,11 +62,9 @@
           <li class="list-group-item">
             <h4><a href="/detail/<%= posts[i]._id %>">할 일 제목 : <%= posts[i].name %></a></h4>
             <p>할 일 마감 날짜 : <%= posts[i].date %> </p>
-            <% console.log('haha'); %>
-            <% if(posts[i].writer) { %>
-              <% console.log(posts[i].writer.toString()); %>
-              <% if(loginUser) { %>
-                <% console.log(loginUser._id.toString()); %>
+            <% if(loginUser) { %>
+              <% if(posts[i].writer) { %>
+                <button class='btn btn-danger chat' data-chatter="<%= loginUser._id.toString() %>" data-writer="<%= posts[i].writer.toString() %>">채팅</button>
                 <% if(posts[i].writer.toString() === loginUser._id.toString()) { %>
                   <button class='btn btn-danger delete' data-id="<%= posts[i]._id %>">삭제</button>
                   <button class='btn btn-danger edit' data-id="<%= posts[i]._id %>" onclick="location.href='/edit/<%= posts[i]._id %>'">수정</button>
@@ -103,6 +101,24 @@
             console.log('list.ejs - fail for deleting')
           })
         })
+      })
+    </script>
+    <script>
+      $('.chat').click((event) => {
+        var writerId = event.target.dataset.writer;
+        var chatterId = event.target.dataset.chatter;
+        console.log("writer id is " + writerId + ", chatter id is " + chatterId);
+        $.ajax({
+          method: 'POST',
+          url: '/chat',
+          data: {writer : writerId, chatter : chatterId}
+        }).done((res) => {
+          console.log('list.ejs - success for chat');
+          window.location.replace('/chat/' + res.chatRoomId)
+        }).fail((xhr, code, err) => {
+          console.log('list.ejs - fail for chat')
+          console.log(err);
+        })  
       })
     </script>
         
